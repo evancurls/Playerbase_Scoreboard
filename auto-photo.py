@@ -2,14 +2,13 @@ import pytesseract
 import cv2
 import PIL.Image
 # copy paste directory to the images
-# C:\Users\inrig\OneDrive\Documents\Python Text Files\OpenCV\pugs
 
 #default configuration for the image processing: use 1
 myconfig = r"--psm 1 --oem 3"
 #6 is good for kda
 
 #what file will be processed and turned into text
-myIMG = "C:/Users/inrig/OneDrive/Documents/Python Text Files/OpenCV/pugs/game3names.PNG"
+myIMG = #saved image links go here
 text = pytesseract.image_to_string(PIL.Image.open(myIMG), config=myconfig)
 print(text)
 
