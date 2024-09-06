@@ -1,0 +1,130 @@
+function calculateKDA(){
+  
+  //ADD ANY PLAYERS THAT JOIN PUGS
+  var players = ["Ozriel","StenoWorld","adumb","Nohr","JackMLG","Chad Socks","LaraGryphon","Zuhair","Zeoh","nickich","hoo","aun","luca2","Oofcide","Oben","dick","super.sex.haver", "curls", "bananapusheen"];
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var scoreboard = SpreadsheetApp.openById('1fh9I37_1cYxWTtGQowIILBmCmSSpXjnSpxnhpiyLobI').getSheetByName('baseline');
+  var sb = SpreadsheetApp.openById('1fh9I37_1cYxWTtGQowIILBmCmSSpXjnSpxnhpiyLobI').getSheetByName('Player.Scores');
+  var End = sb.getLastRow();
+  //CHANGE X <= VALUE BY NUMBER OF PLAYERS
+  //Function: A for loop that goes for each name in the list of players
+  for(x = 0; x <= 18; x++){
+    var kills = 0;
+    var deaths = 0;
+    var assists = 0;
+    var KDA = 0;
+    //loops through the match history
+    for (i = 2; i <= End; i++){
+      if(sb.getRange(i,1).getValue() == players[x]){
+        kills = kills + sb.getRange(i,3).getValue();
+        assists = assists + sb.getRange(i,5).getValue();
+        deaths = deaths + sb.getRange(i,4).getValue();
+      }
+    }
+    KDA = (kills + assists) / deaths;
+    scoreboard.getRange(x + 2, 2).setValue(KDA);
+    scoreboard.getRange(x + 2, 5).setValue(kills);
+    scoreboard.getRange(x + 2, 6).setValue(deaths);
+    scoreboard.getRange(x + 2, 7).setValue(assists);  
+  }
+
+}
+
+function calculateWinrate(){
+  //ADD ANY NEW PLAYERS THAT JOIN PUGS
+  var players = ["Ozriel","StenoWorld","adumb","Nohr","JackMLG","Chad Socks","LaraGryphon","Zuhair","Zeoh","nickich","hoo","aun","luca2","Oofcide","Oben","dick","super.sex.haver", "curls", "bananapusheen"];
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var scoreboard = SpreadsheetApp.openById('1fh9I37_1cYxWTtGQowIILBmCmSSpXjnSpxnhpiyLobI').getSheetByName('baseline');
+  var sb = SpreadsheetApp.openById('1fh9I37_1cYxWTtGQowIILBmCmSSpXjnSpxnhpiyLobI').getSheetByName('Player.Scores');
+  var End = sb.getLastRow();
+  //CHANGE X <= VALUE BY NUMBER OF PLAYERS
+    for(x = 0; x <= 18; x++){
+  var wins = 0;
+  var games = 0;
+  var nameRow = -1;
+  for(i = 2; i <= End; i++){
+    if(sb.getRange(i, 1).getValue() == players[x]){
+        nameRow = i;
+        games++
+        if(sb.getRange(i,7).getValue() == "W"){
+          wins++;
+        }
+    }
+  }
+  if(nameRow != -1){
+    scoreboard.getRange(x + 2, 3).setValue(wins / games);
+    scoreboard.getRange(x + 2, 4).setValue(games);
+  }
+  }
+}
+
+function colorWinrate(){
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var End = ss.getLastRow();
+for(i = 2; i <= End; i++){
+  if(ss.getRange(i,3).getValue() < .5){
+    if(ss.getRange(i,3).getValue() < .25){ ss.getRange(i,3).setBackgroundRGB(255, 102, 102); } else {ss.getRange(i,3).setBackgroundRGB(255, 204, 204)}
+  }
+    if(ss.getRange(i,3).getValue() > .5){
+    if(ss.getRange(i,3).getValue() > .75){ ss.getRange(i,3).setBackgroundRGB(128, 255, 128); } else {ss.getRange(i,3).setBackgroundRGB(204, 255, 204)}
+  }
+  if(ss.getRange(i,3).getValue() == .5){ss.getRange(i,3).setBackgroundRGB(255, 255, 153); }
+}
+}
+
+
+
+function addMatch(){
+  var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var End = ss.getLastRow();
+  var winner = 1;
+  var gameNum = ss.getRange(End, 8).getValue() + 1;
+  var names = ["StenoWorld","hoo", "luca2","Nohr","super.sex.haver", "LaraGryphon","Chad Socks","Zuhair","JackMLG", "nickich"]; //HAS TO BE 10 NAMES
+  //HAS TO BE 10 SCORES, 1 FOR EACH PLAYER
+  var kills = [0,1,1,1,2,1,2,7,6,2]; 
+  var deaths = [4,1,9,2,3,1,0,1,3,0];
+  var assists = [1,3,1,1,1,8,1,2,3,1];
+
+  // GOAL == GET A PASTEBIN SETUP SO I CAN EASY COPY PASTE ALL THE DATA
+  for(i = 0; i < 10; i++){
+      ss.getRange(End + i + 1, 1).setValue(names[i]);
+      ss.getRange(End + i + 1, 2).setValue("SET CHAMPION");
+      ss.getRange(End + i + 1, 3).setValue(kills[i]);
+      ss.getRange(End + i + 1, 4).setValue(deaths[i]);
+      ss.getRange(End + i + 1, 5).setValue(assists[i]);
+      //SETS THE GAME AS A WIN OR LOSS
+      if(winner == 1){
+        if(i < 5){ ss.getRange(End + i + 1, 7).setValue("W");
+        } else { ss.getRange(End + i + 1, 7).setValue("L"); }
+      } else {
+        if(i < 5){ ss.getRange(End + i + 1, 7).setValue("L");
+        } else { ss.getRange(End + i + 1, 7).setValue("W"); }
+      }
+      //SETS THE GAME NUMBER FOR THE MATCHES
+      ss.getRange(End + i + 1, 8).setValue(gameNum);
+  }
+}
+
+
+function dropFilter(){
+    var ss = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var scoreboard = SpreadsheetApp.openById('1fh9I37_1cYxWTtGQowIILBmCmSSpXjnSpxnhpiyLobI').getSheetByName('leaderboard');
+  var End = ss.getLastRow();
+  scoreboard.getRange(2,6).setValue(0)
+  var hello = scoreboard.getRange(2,14).getDisplayValue()
+  if (hello == "KDA"){
+    let sourceValues = scoreboard.getRange("O2:R20").getValues();
+    scoreboard.getRange("A2:D20").setValues(sourceValues)
+    scoreboard.getRange(2,6).setValue(1)
+  }
+  if (hello == "Winrate"){
+    let sourceValues = scoreboard.getRange("S2:V20").getValues();
+    scoreboard.getRange("A2:D20").setValues(sourceValues)
+    scoreboard.getRange(2,6).setValue(2)
+  }
+  if (hello == "Games Played"){
+    let sourceValues = scoreboard.getRange("W2:Z20").getValues();
+    scoreboard.getRange("A2:D20").setValues(sourceValues)
+    scoreboard.getRange(2,6).setValue(3)
+  }
+}
